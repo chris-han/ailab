@@ -37,10 +37,10 @@
     //"PlaybackFile": "AZURE_KINECT_PLAYBACK_FILE"
   },
   "Data": {
-    //"UploadRetries": 10,
-    //"DefaultConnectionLimit": 1,
-    //"SessionsIdentifier": "",
-    //"RecordingFolder": "C:\\Temp\\Recorded Sessions",
-    //"AzureBlobConnection": "AZURE_BLOB_CONNECTION_STRING"
+    "UploadRetries": 10,
+    "DefaultConnectionLimit": 8,
+    "SessionsIdentifier": "Chris",
+    "RecordingFolder": "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions",
+    "AzureBlobConnection": "DefaultEndpointsProtocol=https;AccountName=virtualstage;AccountKey=Jg+NoRSdv60YuoT79A/8Hgch/H7+2Md9do/nhNQxOg+Ld96IpdpIbuL6rTMhyJHm0y/SRiXWfZ3QjiSoX8j6WQ==;EndpointSuffix=core.chinacloudapi.cn"
   }
 }

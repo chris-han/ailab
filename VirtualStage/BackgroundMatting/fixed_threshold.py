@@ -19,18 +19,21 @@ def fixed_split(videos, thresholds, mask_suffix, overlap=0):
         idw_region = f"iw:ih-{threshold + overlap}:0:{threshold - overlap}"
 
         # crop color images
-        code = os.system(
-            f"ffmpeg -i {os.path.join(video, '%04d_img.png')} "
+        cmd=(
+            f"ffmpeg -i \"{os.path.join(video, '%04d_img.png')}\" "
             f'-filter:v "crop={iup_region}" '
-            f"{os.path.join(video+'_up', '%04d_img.png')}"
+            f"\"{os.path.join(video+'_up', '%04d_img.png')}\""
             " > split_logs.txt 2>&1"
+        )
+        code = os.system(
+            cmd
         )
         if code != 0:
             exit(code)
         code = os.system(
-            f"ffmpeg -i {os.path.join(video, '%04d_img.png')} "
+            f"ffmpeg -i \"{os.path.join(video, '%04d_img.png')}\" "
             f'-filter:v "crop={idw_region}" '
-            f"{os.path.join(video+'_dw', '%04d_img.png')}"
+            f"\"{os.path.join(video+'_dw', '%04d_img.png')}\""
             " > split_logs.txt 2>&1"
         )
         if code != 0:
@@ -38,17 +41,17 @@ def fixed_split(videos, thresholds, mask_suffix, overlap=0):
 
         # crop mask images
         code = os.system(
-            f"ffmpeg -i {os.path.join(video, '%04d')}{mask_suffix}.png "
+            f"ffmpeg -i \"{os.path.join(video, '%04d')}{mask_suffix}.png\" "
             f'-filter:v "crop={iup_region}" '
-            f"{os.path.join(video+'_up', '%04d')}{mask_suffix}.png"
+            f"\"{os.path.join(video+'_up', '%04d')}{mask_suffix}.png\""
             " > split_logs.txt 2>&1"
         )
         if code != 0:
             exit(code)
         code = os.system(
-            f"ffmpeg -i {os.path.join(video, '%04d')}{mask_suffix}.png "
+            f"ffmpeg -i \"{os.path.join(video, '%04d')}{mask_suffix}.png\" "
             f'-filter:v "crop={idw_region}" '
-            f"{os.path.join(video+'_dw', '%04d')}{mask_suffix}.png"
+            f"\"{os.path.join(video+'_dw', '%04d')}{mask_suffix}.png\""
             " > split_logs.txt 2>&1"
         )
         if code != 0:
@@ -56,16 +59,16 @@ def fixed_split(videos, thresholds, mask_suffix, overlap=0):
 
         # crop background image
         code = os.system(
-            f"ffmpeg -y -i {video+'.png'} "
-            f"-filter:v \"crop={iup_region}\" {video+'_up.png'}"
+            f"ffmpeg -y -i \"{video+'.png'}\" "
+            f"-filter:v \"crop={iup_region}\" \"{video+'_up.png'}\""
             " > split_logs.txt 2>&1"
         )
         if code != 0:
             exit(code)
         code = os.system(
-            f"ffmpeg -y -i {video+'.png'} "
+            f"ffmpeg -y -i \"{video+'.png'}\" "
             f'-filter:v "crop={idw_region}" '
-            f"{video+'_dw.png'}"
+            f"\"{video+'_dw.png'}\""
             " > split_logs.txt 2>&1"
         )
         if code != 0:
@@ -93,11 +96,11 @@ def fixed_merge(videos, factors, output_dir, suffix, outputs_list, overlap=0):
 
             for o in outputs_list:
                 code = os.system(
-                    f"ffmpeg -i {outpup}/%04d_{o}.png -i {outpdw}/%04d_{o}.png "
+                    f"ffmpeg -i \"{outpup}/%04d_{o}.png\" -i \"{outpdw}/%04d_{o}.png\" "
                     f'-filter_complex "[0:0]crop=iw:ih-{overlap}:0:0[v0];'
                     f"[1:0]crop=iw:ih-{overlap}:0:{overlap}[v1];"
                     f'[v0][v1]vstack" '
-                    f"{out_path + suffix}/%04d_{o}.png -hide_banner"
+                    f"\"{out_path + suffix}/%04d_{o}.png\" -hide_banner"
                     " > merge_logs.txt"
                 )
                 if code != 0:

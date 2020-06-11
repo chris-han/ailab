@@ -6,7 +6,7 @@ from app_parser import get_parser
 from prepare_data import prepare_videos
 from reconstruct import reconstruct_all_video, reconstruct_all_color
 from fixed_threshold import fixed_split, fixed_merge
-from proportional_threshold import proportional_split, proportional_merge
+# from proportional_threshold import proportional_split, proportional_merge
 
 start = time.time()
 
@@ -32,7 +32,7 @@ outputs = args.output_types.split(",")
 op_default = "erode,3,10;dilate,5,5;blur,31,0"
 
 # Prepare the videos to process
-prepare_videos(original_videos, EXT, video_start, video_duration, args.kinect_mask)
+prepare_videos(original_videos, EXT, video_start, video_duration, args.kinect_mask,args.background)
 
 # Split videos as specified by thesholds
 overlap = 5
@@ -41,11 +41,12 @@ if args.fixed_threshold is not None:
     thresholds = args.fixed_threshold.split(",")
 
     fixed_split(original_videos, thresholds, mask_suffix, overlap=overlap)
-elif args.proportional_threshold is not None:
+""" elif args.proportional_threshold is not None:
     thresholds = args.proportional_threshold.split(",")
+    proportional_split(original_videos, thresholds, mask_suffix, overlap=overlap) """
 
-    proportional_split(original_videos, thresholds, mask_suffix, overlap=overlap)
 videos = []
+
 for i, video in enumerate(original_videos):
     if i >= (len(thresholds)) or not thresholds[i]:
         videos.append(video)
@@ -72,17 +73,20 @@ print(f"Morph ops to apply: {mask_ops}")
 print(f" Doing inference on {len(videos)} input videos")
 from background_matting_image import inference  # noqa: E402
 
+backgrounds = [os.path.join(args.background, f[:-4]) for f in os.listdir(args.background) if f.endswith(".mp4")]
+background = backgrounds[0]
 for i, video in enumerate(videos):
     fixed_back = video + ".png"
     if args.proportional_threshold is not None:
         fixed_back = None
     out_path = os.path.join(args.output_dir, os.path.basename(video) + output_suffix)
+    
     if not os.path.exists(out_path):
         inference(
             out_path,
             video,
             sharpen=args.sharpen,
-            target_back=args.background,
+            target_back=background,
             mask_ops=mask_ops[i],
             back=fixed_back,
             mask_suffix=mask_suffix,
@@ -100,7 +104,7 @@ if args.fixed_threshold is not None:
         outputs,
         overlap=overlap,
     )
-elif args.proportional_threshold is not None:
+""" elif args.proportional_threshold is not None:
     proportional_merge(
         original_videos,
         thresholds,
@@ -108,7 +112,7 @@ elif args.proportional_threshold is not None:
         output_suffix,
         outputs,
         overlap=overlap,
-    )
+    ) """
 
 # Generate output videos
 reconstruct_all_video(original_videos, args.output_dir, output_suffix, outputs)

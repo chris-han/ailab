@@ -9,7 +9,7 @@ def reconstruct_all_video(videos, output_dir, suffix, outputs_list):
 
 def reconstruct_video(video, output_dir, suffix, outputs_list):
     # video not split
-    out_path = os.path.join(output_dir, os.path.basename(video))
+    out_path = os.path.join(output_dir, os.path.basename(video)).replace("\\", "/")
 
     for o in outputs_list:
         if not os.path.exists(f"{out_path}_{o}{suffix}.mp4"):
@@ -19,12 +19,17 @@ def reconstruct_video(video, output_dir, suffix, outputs_list):
                 video, out_path + suffix, os.path.basename(video) + suffix, o,
             )
 
-            outp = (out_path + suffix).replace("\\", "/")
-            code = os.system(
-                f"ffmpeg -f concat -i {os.path.join(outp, 'timestampfile.txt')} "
+            outp = (out_path + suffix)#.replace("\\", "/")
+            timestampfile = os.path.join(outp, 'timestampfile.txt').replace("\\", "/")
+            cmd=(
+                #f"ffmpeg -f concat -i \"{os.path.join(outp, 'timestampfile.txt')}\" "
+                f"ffmpeg -f concat -i \"{timestampfile}\" "
                 f"-vcodec libx265 -x265-params lossless=1 -crf 0 -pix_fmt yuv420p "
-                f"{out_path}_{o}{suffix}.mp4"
-                " > bg_matting_logs.txt 2>&1"
+                f"\"{out_path}_{o}{suffix}.mp4\""
+                " > bg_matting_logs.txt 2>&1"               
+            )
+            code = os.system(
+                cmd
             )
             if code != 0:
                 exit(code)
@@ -35,16 +40,19 @@ def reconstruct_video(video, output_dir, suffix, outputs_list):
 def reconstruct_all_color(videos, output_dir, suffix):
     print(f"Reconstructing {len(videos)} original color videos")
     for i, video in enumerate(videos):
-        out_path = os.path.join(output_dir, os.path.basename(video))
+        #out_path = os.path.join(output_dir, os.path.basename(video))
+        out_path = os.path.join(output_dir, os.path.basename(video)).replace("\\", "/")
         if not os.path.exists(f"{out_path}_color{suffix}.mp4"):
             # set up output timestamp file
-            write_input_timestamp_file(video)
+            write_input_timestamp_file(out_path+suffix)
 
-            outp = video.replace("\\", "/")
+            #outp = video.replace("\\", "/")
+            outp = (out_path + suffix)#.replace("\\", "/")
+            timestampfile_color = os.path.join(outp, 'timestampfile_color.txt').replace("\\", "/")
             code = os.system(
-                f"ffmpeg -f concat -i {os.path.join(outp, 'timestampfile_color.txt')} "
+                f"ffmpeg -f concat -i \"{timestampfile_color}\" "
                 f"-vcodec libx265 -x265-params lossless=1 -crf 0 -pix_fmt yuv420p "
-                f"{out_path}_color{suffix}.mp4"
+                f"\"{out_path}_color{suffix}.mp4\""
                 " > bg_matting_logs.txt 2>&1"
             )
             if code != 0:
@@ -56,22 +64,27 @@ def write_output_timestamp_file(input, output, output_dir, output_suffix):
     ts_out = open(os.path.join(output, "timestampfile.txt"), "wt")
     for line in ts_in:
         ts_out.write(
-            line.replace("file ", "file " + output_dir + "/").replace(
+            line.replace(
                 "out", output_suffix
-            )
+            ) 
         )
     ts_in.close()
     ts_out.close()
-
+"""             line.replace("file ", "file " + output_dir + "/").replace(
+                "out", output_suffix """
 
 def write_input_timestamp_file(input):
-    ts_in = open(os.path.join(input, "timestampfile.txt"), "rt")
-    ts_out = open(os.path.join(input, "timestampfile_color.txt"), "wt")
+    timestamp_Path= os.path.join(input, "timestampfile.txt")
+    ts_in = open(timestamp_Path, "rt")
+    colorFile_path= os.path.join(input, "timestampfile_color.txt")
+    ts_out = open(colorFile_path, "wt")
     for line in ts_in:
         ts_out.write(
-            line.replace("file ", "file " + os.path.basename(input) + "/").replace(
+            line.replace(
                 "out", "img"
             )
         )
     ts_in.close()
     ts_out.close()
+"""             line.replace("file ", "file " + os.path.basename(input) + "/").replace(
+                "out", "img" """

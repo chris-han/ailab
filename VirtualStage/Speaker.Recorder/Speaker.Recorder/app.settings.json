@@ -41,6 +41,6 @@
     "DefaultConnectionLimit": 8,
     "SessionsIdentifier": "Chris",
     "RecordingFolder": "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions",
-    "AzureBlobConnection": "DefaultEndpointsProtocol=https;AccountName=virtualstage;AccountKey=Jg+NoRSdv60YuoT79A/8Hgch/H7+2Md9do/nhNQxOg+Ld96IpdpIbuL6rTMhyJHm0y/SRiXWfZ3QjiSoX8j6WQ==;EndpointSuffix=core.chinacloudapi.cn"
+    "AzureBlobConnection": "DefaultEndpointsProtocol=https;AccountName=virtualstage;AccountKey=be5q3zuknEXd422rvYTlw0Qa8W0gmsz+JuS35dNdju6FzqPQ+P9avbbSyAES5Cs9pqvKjvXl0nZyu6YijexmjA==;EndpointSuffix=core.chinacloudapi.cn"
   }
 }

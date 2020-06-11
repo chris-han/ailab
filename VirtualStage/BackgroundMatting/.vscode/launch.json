@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [  
+                "--name", "Speaker",
+                "--input", "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions\\2020-08-6-17-29-19\\",
+                "--output_dir", "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions\\2020-08-6-17-29-19\\output\\",
+                "--fixed_threshold", "640,",
+                "--output_types", "out,matte,compose,fg",
+                "--start", "0",
+                "--duration", "30",
+                "--background", "C:\\Users\\chha\\Videos\\Microsoft.ZuneVideo_8wekyb3d8bbwe!Microsoft.ZuneVideo"
+        }
+    ]
+}

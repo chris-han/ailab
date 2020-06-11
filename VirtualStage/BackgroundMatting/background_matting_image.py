@@ -19,8 +19,11 @@ from networks import ResnetConditionHR
 from tqdm import tqdm
 
 torch.set_num_threads(1)
-# os.environ["CUDA_VISIBLE_DEVICES"]="4"
-print("CUDA Device: " + os.environ["CUDA_VISIBLE_DEVICES"])
+#os.environ["CUDA_VISIBLE_DEVICES"]="1" this wont work, Chris Han
+torch.cuda.set_device(0) #use this to set GPU
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print('Using device:', device)
+#print("CUDA Device: " + os.environ["CUDA_VISIBLE_DEVICES"])
 
 
 def sharpen_image(img):
@@ -38,7 +41,7 @@ def inference(
     back=None,
     trained_model="real-fixed-cam",
     mask_suffix="_masksDL",
-    outputs=["out"],
+    outputs=["out","compose"],#chris
     output_suffix="",
 ):
     # input model
@@ -121,8 +124,9 @@ def inference(
         if video:  # if video mode, load target background frames
             # target background path
             if compose_output:
+                bg_path = os.path.join(target_back, filename)#.replace("_img.png", ".png") Chris Han
                 back_img10 = cv2.imread(
-                    os.path.join(target_back, filename.replace("_img.png", ".png"))
+                    bg_path
                 )
                 back_img10 = cv2.cvtColor(back_img10, cv2.COLOR_BGR2RGB)
             # Green-screen background

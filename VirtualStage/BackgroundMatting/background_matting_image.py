@@ -105,7 +105,7 @@ def inference(
 
     for i in tqdm(range(0, len(test_imgs))):
         filename = test_imgs[i]
-        # original image
+        # background from original image
         bgr_img = cv2.imread(os.path.join(data_path, filename))
         bgr_img = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
 
@@ -129,6 +129,15 @@ def inference(
                     bg_path
                 )
                 back_img10 = cv2.cvtColor(back_img10, cv2.COLOR_BGR2RGB)
+
+                #chris
+                bg_path = os.path.join(target_back, filename)#.replace("_img.png", ".png") Chris Han
+                back_img10 = cv2.imread(
+                    bg_path
+                )
+                back_img10 = cv2.cvtColor(back_img10, cv2.COLOR_BGR2RGB)
+
+                
             # Green-screen background
             back_img20 = np.zeros(bgr_img.shape)
             back_img20[..., 0] = 120
@@ -304,7 +313,7 @@ def inference(
                 cv2.cvtColor(fg_out0, cv2.COLOR_BGR2RGB),
             )
         if compose_output:
-            back_img10 = cv2.resize(back_img10, (C0, R0))
+            back_img10 = cv2.resize(back_img10, (C0, R0)) #chris han
             comp_im_tr1 = composite4(fg_out0, back_img10, alpha_out0)
             cv2.imwrite(
                 result_path

@@ -12,8 +12,8 @@
             "console": "integratedTerminal",
             "args": [  
                 "--name", "Speaker",
-                "--input", "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions\\2020-08-6-17-29-19\\",
-                "--output_dir", "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions\\2020-08-6-17-29-19\\output\\",
+                "--input", "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions\\2020-13-6-20-39-45\\",
+                "--output_dir", "C:\\Users\\chha\\Videos\\Captures\\My Recorded Sessions\\2020-13-6-20-39-45\\output\\",
                 "--fixed_threshold", "640,",
                 "--output_types", "out,matte,compose,fg",
                 "--start", "0",

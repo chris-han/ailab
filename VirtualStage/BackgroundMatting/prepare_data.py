@@ -53,11 +53,14 @@ def prepare_videos(
             if code != 0:
                 exit(code)
 
-        print(f"Extracting background...")
-        code = os.system(
+        print(f"Extracting original background, single image...")
+        cmd=(
             f"ffmpeg -y -i \"{video}{extension}\" -vf scale={width}:{height} "
             f"-map 0:0 -ss 00:00:02.000 -vframes 1 \"{video}.png\" -hide_banner"
             " > bg_matting_logs.txt 2>&1"
+        )
+        code = os.system(
+            cmd
         )
         if code != 0:
             exit(code)
@@ -68,18 +71,23 @@ def prepare_videos(
     print(f"Dumping frames for {background_path} background videos")
     for i, background in enumerate(tqdm(backgrounds)):
         #os.makedirs(background, exist_ok=True)
-        try:
-            os.makedirs(background)
-        except FileExistsError:
-            continue
+        if not os.path.exists(background):
+            try:
+                os.makedirs(background)
+            except FileExistsError:
+                continue
 
-        code = os.system(
-            f"ffmpeg -i \"{background}.mp4\" \"{background}/%04d_img.png\" -hide_banner"
-            f" > bg_image_logs.txt 2>&1"
-        )
-        if code != 0:
-            exit(code)
-        print(f"Dumped frames for {background} ({i+1}/{len(videos)})")
+            code = os.system(
+                f"ffmpeg -i \"{background}.mp4\" \"{background}/%04d_img.png\" -hide_banner"
+                f" > bg_image_logs.txt 2>&1"
+            )
+            if code != 0:
+                exit(code)
+            print(f"Dumped frames for {background} ({i+1}/{len(videos)})")
+
+            
+        else:
+            print(f"background frames at {background} exist")
 
     print(f"Creating CSV")
     background_frames = []

@@ -40,7 +40,7 @@ thresholds = [""] * len(original_videos)
 if args.fixed_threshold is not None:
     thresholds = args.fixed_threshold.split(",")
 
-    fixed_split(original_videos, thresholds, mask_suffix, overlap=overlap)
+    fixed_split(original_videos, thresholds, mask_suffix, overlap=overlap, background_path=args.background)
 """ elif args.proportional_threshold is not None:
     thresholds = args.proportional_threshold.split(",")
     proportional_split(original_videos, thresholds, mask_suffix, overlap=overlap) """
@@ -74,19 +74,22 @@ print(f" Doing inference on {len(videos)} input videos")
 from background_matting_image import inference  # noqa: E402
 
 backgrounds = [os.path.join(args.background, f[:-4]) for f in os.listdir(args.background) if f.endswith(".mp4")]
-background = backgrounds[0]
+background = backgrounds[0] #only support one backtround vide file
 for i, video in enumerate(videos):
     fixed_back = video + ".png"
     if args.proportional_threshold is not None:
         fixed_back = None
     out_path = os.path.join(args.output_dir, os.path.basename(video) + output_suffix)
-    
+    if video.endswith('up'):
+        target_background = background+'_up'
+    else:
+        target_background = background+'_dw'
     if not os.path.exists(out_path):
         inference(
             out_path,
             video,
             sharpen=args.sharpen,
-            target_back=background,
+            target_back=target_background,
             mask_ops=mask_ops[i],
             back=fixed_back,
             mask_suffix=mask_suffix,
@@ -115,7 +118,7 @@ if args.fixed_threshold is not None:
     ) """
 
 # Generate output videos
-reconstruct_all_video(original_videos, args.output_dir, output_suffix, outputs)
+reconstruct_all_video(original_videos, args.output_dir, output_suffix, outputs,background_path=args.background)
 reconstruct_all_color(original_videos, args.output_dir, output_suffix)
 
 end = time.time()

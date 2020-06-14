@@ -1,13 +1,13 @@
 import os
 
 
-def reconstruct_all_video(videos, output_dir, suffix, outputs_list):
+def reconstruct_all_video(videos, output_dir, suffix, outputs_list, background_path):
     print(f"Reconstructing {len(videos)} output videos")
     for i, video in enumerate(videos):
-        reconstruct_video(video, output_dir, suffix, outputs_list)
+        reconstruct_video(video, output_dir, suffix, outputs_list,background_path)
 
 
-def reconstruct_video(video, output_dir, suffix, outputs_list):
+def reconstruct_video(video, output_dir, suffix, outputs_list, background_path):
     # video not split
     out_path = os.path.join(output_dir, os.path.basename(video)).replace("\\", "/")
 
@@ -26,7 +26,7 @@ def reconstruct_video(video, output_dir, suffix, outputs_list):
                 f"ffmpeg -f concat -i \"{timestampfile}\" "
                 f"-vcodec libx265 -x265-params lossless=1 -crf 0 -pix_fmt yuv420p "
                 f"\"{out_path}_{o}{suffix}.mp4\""
-                " > bg_matting_logs.txt 2>&1"               
+                " > reconstruct_video_logs.txt 2>&1"               
             )
             code = os.system(
                 cmd
@@ -49,11 +49,14 @@ def reconstruct_all_color(videos, output_dir, suffix):
             #outp = video.replace("\\", "/")
             outp = (out_path + suffix)#.replace("\\", "/")
             timestampfile_color = os.path.join(outp, 'timestampfile_color.txt').replace("\\", "/")
-            code = os.system(
+            cmd=(
                 f"ffmpeg -f concat -i \"{timestampfile_color}\" "
                 f"-vcodec libx265 -x265-params lossless=1 -crf 0 -pix_fmt yuv420p "
                 f"\"{out_path}_color{suffix}.mp4\""
-                " > bg_matting_logs.txt 2>&1"
+                " > reconstruct_all_color_logs.txt 2>&1"               
+            )
+            code = os.system(
+                cmd
             )
             if code != 0:
                 exit(code)
